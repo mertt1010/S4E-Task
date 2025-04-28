@@ -21,13 +21,13 @@
             e.preventDefault();
             const prompt = document.getElementById('prompt').value;
 
-            fetch('http://127.0.0.1:5000/generate_code', {
-            method: 'POST',
-               headers: {
-                'Content-Type': 'application/json'
+            fetch('http://127.0.0.1:5000/generate_code', {  // Minikube servis URL'sini burada kullanıyoruz
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
                 },
-                   body: JSON.stringify({ prompt: prompt })
-                     })
+                body: JSON.stringify({ prompt: prompt })
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.code) {

@@ -1,23 +1,23 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # CORS modülünü içeri aktar
-import subprocess
+from flask_cors import CORS
+from ollama_integration import generate_code  # Ollama entegrasyonu burada
 
 app = Flask(__name__)
-CORS(app)  # CORS'u tüm API'ye uyguladık
+CORS(app)
 
 @app.route('/generate_code', methods=['POST'])
-def generate_code():
+def generate_code_endpoint():
     prompt = request.json.get('prompt')
     if not prompt:
         return jsonify({'error': 'No prompt provided'}), 400
 
-    result = subprocess.run(['ollama', 'run', 'meta-llama', prompt], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    
-    if result.returncode == 0:
-        code_output = result.stdout.decode('utf-8')
-        return jsonify({'code': code_output}), 200
+    # Ollama modelinden kod üretme
+    generated_code = generate_code(prompt)
+
+    if generated_code:
+        return jsonify({'code': generated_code}), 200
     else:
-        return jsonify({'error': result.stderr.decode('utf-8')}), 500
+        return jsonify({'error': 'Failed to generate code'}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')  # Herkese açık hale getirdik.
