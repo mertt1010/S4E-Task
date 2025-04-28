@@ -1,9 +1,9 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # CORS modülünü içeri aktar
+from flask_cors import CORS  
 import subprocess
 
 app = Flask(__name__)
-CORS(app)  # CORS'u tüm API'ye uyguladık
+CORS(app)  
 
 @app.route('/generate_code', methods=['POST'])
 def generate_code():
