@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yapay Zeka Destekli Kod Üretici</title>
+</head>
+<body>
+    <h1>Yapay Zeka Destekli Kod Üretici</h1>
+    <form id="codeForm">
+        <label for="prompt">Kod Üretmek İçin Bir İstek Girin:</label><br>
+        <input type="text" id="prompt" name="prompt" required><br><br>
+        <button type="submit">Kod Üret</button>
+    </form>
+
+    <h2>Üretilen Kod:</h2>
+    <pre id="codeOutput"></pre>
+
+    <script>
+        document.getElementById('codeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const prompt = document.getElementById('prompt').value;
+
+            fetch('http://127.0.0.1:5000/generate_code', {
+            method: 'POST',
+               headers: {
+                'Content-Type': 'application/json'
+                },
+                   body: JSON.stringify({ prompt: prompt })
+                     })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code) {
+                    document.getElementById('codeOutput').textContent = data.code;
+                } else {
+                    document.getElementById('codeOutput').textContent = "Hata: " + data.error;
+                }
+            })
+            .catch(error => {
+                document.getElementById('codeOutput').textContent = "Sunucu hatası: " + error;
+            });
+        });
+    </script>
+</body>
+</html>
